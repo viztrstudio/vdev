@@ -635,7 +635,7 @@ export default function SuperAdminPanel({
                                 superAdmin.changeUserStatus(user.id, newStatus);
                                 showToast(
                                   `User ${user.name} is now [${newStatus.toUpperCase()}].`,
-                                  newStatus === 'active' ? 'success' : 'warn'
+                                  newStatus === 'active' ? 'success' : 'info'
                                 );
                               }}
                               className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
@@ -1261,7 +1261,7 @@ export default function SuperAdminPanel({
                         onClick={() => {
                           if (confirm(`Restart GPU cluster for ${node.regionName}? Active sessions will be migrated.`)) {
                             superAdmin.restartRegionGPU(node.id);
-                            showToast(`Dispatched warm restart to ${node.regionName}`, 'warn');
+                            showToast(`Dispatched warm restart to ${node.regionName}`, 'info');
                           }
                         }}
                         className="p-1.5 rounded bg-rose-950/50 hover:bg-rose-900 border border-rose-800/60 text-rose-400 transition-colors cursor-pointer"
@@ -1357,7 +1357,7 @@ export default function SuperAdminPanel({
                         superAdmin.toggleFeature(toggle.key);
                         showToast(
                           `${toggle.name} is now ${!toggle.enabled ? 'ENABLED' : 'DISABLED'}.`,
-                          !toggle.enabled ? 'success' : 'warn'
+                          !toggle.enabled ? 'success' : 'info'
                         );
                       }}
                       className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${

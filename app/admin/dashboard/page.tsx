@@ -55,6 +55,7 @@ import PixelStreamingSessionControl from '@/components/admin/PixelStreamingSessi
 import FileStorageManager from '@/components/admin/FileStorageManager';
 import SuperAdminCMSManager from '@/components/admin/SuperAdminCMSManager';
 import SuperAdminPanel from '@/components/admin/SuperAdminPanel';
+import { ViztrLogoMark } from '@/components/ui/Logo';
 import CollapsibleLeftFilterPanel from '@/components/dashboard/CollapsibleLeftFilterPanel';
 import CollapsibleRightInspectorPanel from '@/components/dashboard/CollapsibleRightInspectorPanel';
 import { useAppStore } from '@/lib/store';
@@ -237,11 +238,12 @@ export default function AdminDashboardPage() {
             {mobileSidebarOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
 
-          <Link href="/" className="flex items-center gap-2">
-            <span className="font-display font-black text-lg tracking-wider text-white">
-              VIZ<span className="text-[#3ECF8E]">TR</span>
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <ViztrLogoMark className="w-7 h-7 group-hover:scale-105 transition-transform" />
+            <span className="font-serif font-bold text-lg tracking-wider text-white">
+              VizTR
             </span>
-            <span className="hidden sm:inline px-2 py-0.5 rounded bg-[#09090B] border border-[#27272A] text-[#3ECF8E] text-[10px] font-mono font-bold uppercase">
+            <span className="hidden sm:inline px-2 py-0.5 rounded bg-[#09090B] border border-[#27272A] text-[#e2c073] text-[10px] font-mono font-bold uppercase">
               Super Admin Core v3.0
             </span>
           </Link>

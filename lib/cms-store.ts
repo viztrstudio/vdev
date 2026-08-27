@@ -430,8 +430,8 @@ const INITIAL_PAGES: CMSPageItem[] = [
   },
 ];
 
-const INITIAL_BLOG_POSTS: CMSBlogPost[] = initialBlogPosts.map((post) => ({
-  id: `blog-${post.id}`,
+const INITIAL_BLOG_POSTS: CMSBlogPost[] = initialBlogPosts.map((post, idx) => ({
+  id: `blog-${post.slug || idx}`,
   title: post.title,
   slug: post.slug,
   category: post.category,
@@ -443,7 +443,7 @@ const INITIAL_BLOG_POSTS: CMSBlogPost[] = initialBlogPosts.map((post) => ({
   readTime: post.readTime,
   image: post.image,
   status: 'published',
-  featured: post.id === 1,
+  featured: idx === 0,
   tags: [post.category, 'Architecture', 'CGI', 'Spatial XR'],
   seo: {
     metaTitle: `${post.title} | VizTR Journal`,
