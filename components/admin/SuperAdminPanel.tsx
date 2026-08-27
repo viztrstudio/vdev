@@ -108,7 +108,8 @@ export default function SuperAdminPanel({
     phone: '',
     twoFactorEnabled: false,
     assignedProjectsCount: 1,
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    lastLogin: 'Never'
   });
 
   // Feature Toggle Filter
@@ -214,7 +215,8 @@ export default function SuperAdminPanel({
       phone: '',
       twoFactorEnabled: false,
       assignedProjectsCount: 1,
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+      lastLogin: 'Never'
     });
   };
 

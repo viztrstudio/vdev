@@ -320,7 +320,7 @@ export default function ProjectManagementSystem({
   const handleAdvanceStage = (stageIdx: number) => {
     if (!selectedProject) return;
     const updatedStages = selectedProject.pipeline.stages.map((st, idx) => {
-      if (idx < stageIdx) return { ...st, status: 'completed' as const, deliverablesApproved: st.deliverablesTotal };
+      if (idx < stageIdx) return { ...st, status: 'completed' as const, deliverablesApproved: st.deliverablesCount };
       if (idx === stageIdx) return { ...st, status: 'in_progress' as const };
       return { ...st, status: 'pending' as const };
     });
@@ -642,7 +642,7 @@ export default function ProjectManagementSystem({
 
                       return (
                         <div
-                          key={stage.id}
+                          key={stage.stageNumber || idx}
                           className={`p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
                             isCurrent
                               ? 'bg-[#3ECF8E]/10 border-[#3ECF8E]'

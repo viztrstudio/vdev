@@ -13,6 +13,7 @@ import {
   Eye,
   Play,
   Clock,
+  Calendar,
   CheckCircle2,
   AlertCircle,
   FileCode,
@@ -1592,6 +1593,16 @@ export default function ClientDashboardPage() {
                 <p className="text-xs text-[#A1A1AA]">
                   Lead Architectural Contact: {selectedProject.leadArchitect}
                 </p>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2.5 text-[11px] font-mono text-[#A1A1AA]">
+                  <span className="flex items-center gap-1.5" id="project-created-at-display">
+                    <Calendar className="w-3.5 h-3.5 text-[#3ECF8E]" />
+                    <span>Created: <strong className="text-white font-semibold">{selectedProject.roadmapStages[0]?.actualDate || 'N/A'}</strong></span>
+                  </span>
+                  <span className="flex items-center gap-1.5" id="project-last-modified-display">
+                    <Clock className="w-3.5 h-3.5 text-[#3ECF8E]" />
+                    <span>Last Modified: <strong className="text-white font-semibold">{selectedProject.lastUpdate}</strong></span>
+                  </span>
+                </div>
               </div>
 
               {/* ACTION LAUNCHERS */}
