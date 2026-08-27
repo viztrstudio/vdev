@@ -49,6 +49,12 @@ import ModelManager from '@/components/admin/ModelManager';
 import GoogleDriveAdminManager from '@/components/admin/GoogleDriveAdminManager';
 import GoogleMeetAdminManager from '@/components/admin/GoogleMeetAdminManager';
 import SuperAdminProjectManager from '@/components/admin/SuperAdminProjectManager';
+import ProjectManagementSystem from '@/components/admin/ProjectManagementSystem';
+import XRLinkGenerator from '@/components/admin/XRLinkGenerator';
+import PixelStreamingSessionControl from '@/components/admin/PixelStreamingSessionControl';
+import FileStorageManager from '@/components/admin/FileStorageManager';
+import SuperAdminCMSManager from '@/components/admin/SuperAdminCMSManager';
+import SuperAdminPanel from '@/components/admin/SuperAdminPanel';
 import CollapsibleLeftFilterPanel from '@/components/dashboard/CollapsibleLeftFilterPanel';
 import CollapsibleRightInspectorPanel from '@/components/dashboard/CollapsibleRightInspectorPanel';
 import { useAppStore } from '@/lib/store';
@@ -60,24 +66,47 @@ import {
   PaymentStatus,
   TimesheetEntry
 } from '@/lib/projects-data';
+import { FolderKanban, Zap, QrCode } from 'lucide-react';
 
-// 6 Sections with admin routes / tabs
+// Core Systems & Admin routes / tabs
 const SIDEBAR_SECTIONS = [
+  {
+    title: 'Super Admin Governance',
+    items: [
+      { id: 'super-admin-panel', label: 'Master Super Admin Panel', icon: Shield },
+      { id: 'super-admin-users', label: 'Manage Admins & Users', icon: Users },
+      { id: 'super-admin-analytics', label: 'System Analytics', icon: TrendingUp },
+      { id: 'super-admin-revenue', label: 'Revenue & MRR Tracking', icon: DollarSign },
+      { id: 'super-admin-gpu', label: 'GPU Usage Monitoring', icon: Cpu },
+      { id: 'super-admin-toggles', label: 'Feature Toggles Switchboard', icon: SlidersHorizontal },
+      { id: 'super-admin-health', label: 'Global Health & Error Logs', icon: Activity },
+    ],
+  },
+  {
+    title: 'Core Systems Fleet',
+    items: [
+      { id: 'project-management', label: 'Project Management', icon: FolderKanban },
+      { id: 'xr-links', label: 'XR Link Generator', icon: Box },
+      { id: 'pixel-streaming-control', label: 'Pixel Streaming Control', icon: Server },
+      { id: 'file-storage', label: 'Multi-Cloud File Storage', icon: HardDrive },
+    ],
+  },
+  {
+    title: 'Super Admin CMS Suite',
+    items: [
+      { id: 'cms-manager', label: 'Master CMS Engine', icon: Shield },
+      { id: 'pages', label: 'Pages & Templates', icon: FileText },
+      { id: 'blog', label: 'Blog Posts', icon: FileText },
+      { id: 'cms-services', label: 'Services CMS', icon: Layers },
+      { id: 'media', label: 'Media & Placeholders', icon: Globe },
+      { id: 'design-themes', label: 'Theme & Layout', icon: Palette },
+    ],
+  },
   {
     title: 'Overview & Pipelines',
     items: [
       { id: 'dashboard', label: 'Platform Overview', icon: Activity },
       { id: 'projects', label: 'Commissions & Pipelines', icon: Database },
-      { id: 'analytics', label: 'Analytics & Hours', icon: TrendingUp },
-    ],
-  },
-  {
-    title: 'Super Admin Authority',
-    items: [
-      { id: 'super-admin-crud', label: 'Master CRUD & Telemetry', icon: Shield },
-      { id: 'users', label: 'User & Client Roles', icon: Users },
-      { id: 'clients', label: 'Client Access Tokens', icon: UserCheck },
-      { id: 'inquiries', label: 'Contact Inquiries', icon: MessageSquare },
     ],
   },
   {
@@ -86,16 +115,6 @@ const SIDEBAR_SECTIONS = [
       { id: 'vr-configurator', label: 'VR Tour Builder', icon: Headset },
       { id: 'ar', label: 'AR QuickLook Assets', icon: Box },
       { id: 'streaming', label: 'GPU & Pixel Streaming', icon: Server },
-    ],
-  },
-  {
-    title: 'Content & Design',
-    items: [
-      { id: 'blog', label: 'Blog Management', icon: FileText },
-      { id: 'cms-services', label: 'Services CMS', icon: Layers },
-      { id: 'media', label: 'Media Library', icon: Globe },
-      { id: 'design-themes', label: 'Theme Manager', icon: Palette },
-      { id: 'seo', label: 'SEO Settings', icon: Globe },
     ],
   },
   {
@@ -117,6 +136,7 @@ const SIDEBAR_SECTIONS = [
 
 export default function AdminDashboardPage() {
   const [activeSection, setActiveSection] = useState('dashboard');
+  const [activeRoleView, setActiveRoleView] = useState<'SUPER_ADMIN' | 'ADMIN' | 'USER' | 'CLIENT'>('SUPER_ADMIN');
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
@@ -490,6 +510,190 @@ export default function AdminDashboardPage() {
                 </div>
               )}
 
+              {/* SUPER ADMIN GOVERNANCE COMMAND HERO */}
+              <div className="p-5 rounded-2xl bg-gradient-to-r from-purple-950/40 via-[#18181B] to-[#121214] border border-purple-800/40 shadow-xl space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400">
+                      <Shield className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold font-display text-white">
+                        Super Admin Governance & System Infrastructure
+                      </h3>
+                      <p className="text-xs text-[#A1A1AA]">
+                        RBAC user & admin management, MRR revenue tracking, global GPU telemetry, feature switchboard & diagnostics.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setActiveSection('super-admin-panel')}
+                    className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-mono font-bold flex items-center gap-1.5 transition-all shadow-md cursor-pointer shrink-0"
+                  >
+                    <span>Open Super Admin Console</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 pt-1">
+                  {[
+                    { id: 'super-admin-users', label: 'Admins & Users', icon: Users, desc: 'Role management & 2FA' },
+                    { id: 'super-admin-analytics', label: 'System Analytics', icon: TrendingUp, desc: 'Growth & project counts' },
+                    { id: 'super-admin-revenue', label: 'Revenue & MRR', icon: DollarSign, desc: '$156.5k MRR & ARR' },
+                    { id: 'super-admin-gpu', label: 'GPU Cluster Fleet', icon: Cpu, desc: 'Global regional load' },
+                    { id: 'super-admin-toggles', label: 'Feature Toggles', icon: SlidersHorizontal, desc: 'Global switchboard' },
+                    { id: 'super-admin-health', label: 'System Health', icon: Activity, desc: 'Uptime & error logs' },
+                  ].map((tile) => {
+                    const TileIcon = tile.icon;
+                    return (
+                      <button
+                        key={tile.id}
+                        onClick={() => setActiveSection(tile.id)}
+                        className="p-3 rounded-xl bg-[#09090B] hover:bg-[#18181B] border border-[#27272A] hover:border-purple-500/50 text-left transition-all group cursor-pointer"
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <TileIcon className="w-3.5 h-3.5 text-purple-400" />
+                          <ChevronRight className="w-3 h-3 text-[#71717A] group-hover:text-white" />
+                        </div>
+                        <div className="font-bold text-xs text-white font-display truncate">
+                          {tile.label}
+                        </div>
+                        <div className="text-[9px] text-[#71717A] font-mono truncate">
+                          {tile.desc}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 4 CORE SYSTEMS QUICK LAUNCH TILES */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-[#A1A1AA] flex items-center gap-2">
+                    <Sparkles className="w-3.5 h-3.5 text-[#3ECF8E]" />
+                    <span>Studio Core Systems Command Fleet</span>
+                  </h3>
+                  <span className="text-[10px] font-mono text-[#3ECF8E]">v3.2 Production Fleet</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                  <div
+                    onClick={() => setActiveSection('project-management')}
+                    className="p-4 rounded-xl bg-gradient-to-br from-[#18181B] to-[#121214] border border-[#27272A] hover:border-[#3ECF8E] transition-all cursor-pointer space-y-2 group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="w-8 h-8 rounded-lg bg-[#3ECF8E]/10 border border-[#3ECF8E]/40 flex items-center justify-center text-[#3ECF8E] group-hover:scale-105 transition-transform">
+                        <FolderKanban className="w-4 h-4" />
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-[#71717A] group-hover:text-[#3ECF8E] transition-colors" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-white font-display">Project Management</h4>
+                      <p className="text-[10px] text-[#A1A1AA] mt-0.5">Create, assign team roles, track pipeline status & assets.</p>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => setActiveSection('xr-links')}
+                    className="p-4 rounded-xl bg-gradient-to-br from-[#18181B] to-[#121214] border border-[#27272A] hover:border-[#3ECF8E] transition-all cursor-pointer space-y-2 group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="w-8 h-8 rounded-lg bg-sky-950/80 border border-sky-800 flex items-center justify-center text-sky-400 group-hover:scale-105 transition-transform">
+                        <Box className="w-4 h-4" />
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-[#71717A] group-hover:text-sky-400 transition-colors" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-white font-display">XR Link Generator</h4>
+                      <p className="text-[10px] text-[#A1A1AA] mt-0.5">Generate unique tokens, map 3D models & QR codes.</p>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => setActiveSection('pixel-streaming-control')}
+                    className="p-4 rounded-xl bg-gradient-to-br from-[#18181B] to-[#121214] border border-[#27272A] hover:border-[#3ECF8E] transition-all cursor-pointer space-y-2 group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="w-8 h-8 rounded-lg bg-purple-950/80 border border-purple-800 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform">
+                        <Server className="w-4 h-4" />
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-[#71717A] group-hover:text-purple-400 transition-colors" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-white font-display">Pixel Streaming Control</h4>
+                      <p className="text-[10px] text-[#A1A1AA] mt-0.5">Manage WebRTC URLs, GPU nodes & live VRAM telemetry.</p>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => setActiveSection('file-storage')}
+                    className="p-4 rounded-xl bg-gradient-to-br from-[#18181B] to-[#121214] border border-[#27272A] hover:border-[#3ECF8E] transition-all cursor-pointer space-y-2 group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="w-8 h-8 rounded-lg bg-amber-950/80 border border-amber-800 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
+                        <HardDrive className="w-4 h-4" />
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-[#71717A] group-hover:text-amber-400 transition-colors" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-white font-display">Multi-Cloud File Storage</h4>
+                      <p className="text-[10px] text-[#A1A1AA] mt-0.5">AWS S3, Cloudflare R2, Google Drive & Local symlinks.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* SUPER ADMIN CMS QUICK SUITE BAR */}
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-[#18181B] via-[#14161D] to-[#121214] border border-[#27272A] space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-[#3ECF8E]" />
+                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
+                      Super Admin CMS Quick Access Hub
+                    </h3>
+                  </div>
+                  <button
+                    onClick={() => setActiveSection('cms-manager')}
+                    className="text-[11px] font-mono text-[#3ECF8E] font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>Open Master CMS Engine</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+                  {[
+                    { id: 'pages', label: 'Pages & SEO', icon: FileText, desc: 'CRUD & Templates' },
+                    { id: 'blog', label: 'Blog Posts', icon: FileText, desc: 'Articles & Drafts' },
+                    { id: 'cms-services', label: 'Services CMS', icon: Layers, desc: 'Tiers & Specs' },
+                    { id: 'media', label: 'Media Library', icon: Globe, desc: 'Uploads & Placeholders' },
+                    { id: 'design-themes', label: 'Theme & Order', icon: Palette, desc: 'Colors & Reordering' },
+                    { id: 'cms-manager', label: 'Social & Menus', icon: Share2, desc: 'Navigation & Links' },
+                  ].map((tile) => {
+                    const TileIcon = tile.icon;
+                    return (
+                      <button
+                        key={tile.id}
+                        onClick={() => setActiveSection(tile.id)}
+                        className="p-3 rounded-xl bg-[#09090B] hover:bg-[#18181B] border border-[#27272A] hover:border-[#3ECF8E]/40 text-left transition-all group cursor-pointer"
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <TileIcon className="w-3.5 h-3.5 text-[#3ECF8E]" />
+                          <ChevronRight className="w-3 h-3 text-[#71717A] group-hover:text-white" />
+                        </div>
+                        <div className="font-bold text-xs text-white font-display truncate">
+                          {tile.label}
+                        </div>
+                        <div className="text-[9px] text-[#71717A] font-mono truncate">
+                          {tile.desc}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* 3D MODEL & ASSET MANAGEMENT SECTION EMBED */}
               <div className="space-y-3">
                 <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-[#A1A1AA]">
@@ -498,6 +702,50 @@ export default function AdminDashboardPage() {
                 <ModelManager />
               </div>
             </div>
+          )}
+
+          {/* SECTION: SUPER ADMIN GOVERNANCE PANEL */}
+          {(activeSection === 'super-admin-panel' ||
+            activeSection === 'super-admin-users' ||
+            activeSection === 'super-admin-analytics' ||
+            activeSection === 'super-admin-revenue' ||
+            activeSection === 'super-admin-gpu' ||
+            activeSection === 'super-admin-toggles' ||
+            activeSection === 'super-admin-health' ||
+            activeSection === 'users' ||
+            activeSection === 'analytics' ||
+            activeSection === 'revenue' ||
+            activeSection === 'clients' ||
+            activeSection === 'inquiries') && (
+            <SuperAdminPanel
+              currentRoleView={activeRoleView}
+              onSwitchRoleView={setActiveRoleView}
+            />
+          )}
+
+          {/* SECTION: PROJECT MANAGEMENT SYSTEM */}
+          {activeSection === 'project-management' && (
+            <ProjectManagementSystem
+              projects={projectsList}
+              onAddProject={handleAddProject}
+              onUpdateProject={handleUpdateProject}
+              onDeleteProject={handleDeleteProject}
+            />
+          )}
+
+          {/* SECTION: XR LINK GENERATOR */}
+          {activeSection === 'xr-links' && (
+            <XRLinkGenerator projects={projectsList} />
+          )}
+
+          {/* SECTION: PIXEL STREAMING CONTROL */}
+          {(activeSection === 'pixel-streaming-control' || activeSection === 'streaming') && (
+            <PixelStreamingSessionControl />
+          )}
+
+          {/* SECTION: MULTI-CLOUD & LOCAL FILE STORAGE */}
+          {activeSection === 'file-storage' && (
+            <FileStorageManager projects={projectsList} />
           )}
 
           {/* SECTION 2: SUPER ADMIN MASTER CRUD */}
@@ -521,33 +769,18 @@ export default function AdminDashboardPage() {
             </div>
           )}
 
-          {/* SECTION 4: STREAMING */}
-          {activeSection === 'streaming' && (
-            <div className="space-y-6">
-              <div className="space-y-1">
-                <h2 className="text-2xl font-bold font-display text-white">NVIDIA GPU Cluster & Pixel Streaming Fleet</h2>
-                <p className="text-xs text-[#A1A1AA]">Manage WebRTC signaling servers, adjust bitrate limits, and inspect real-time frame timings.</p>
-              </div>
-              <div className="p-6 rounded-2xl bg-[#18181B] border border-[#27272A] space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono">
-                  <div className="p-4 rounded-xl bg-[#09090B] border border-[#27272A] space-y-1">
-                    <div className="text-[#71717A]">Active WebRTC Sessions</div>
-                    <div className="text-2xl font-bold text-[#3ECF8E]">14 Instances</div>
-                    <div className="text-[10px] text-[#A1A1AA]">Peak Capacity: 64</div>
-                  </div>
-                  <div className="p-4 rounded-xl bg-[#09090B] border border-[#27272A] space-y-1">
-                    <div className="text-[#71717A]">Average Roundtrip Latency</div>
-                    <div className="text-2xl font-bold text-white">14.2 ms</div>
-                    <div className="text-[10px] text-[#3ECF8E]">Optimal &lt; 20ms</div>
-                  </div>
-                  <div className="p-4 rounded-xl bg-[#09090B] border border-[#27272A] space-y-1">
-                    <div className="text-[#71717A]">GPU Cluster Power</div>
-                    <div className="text-2xl font-bold text-white">32x RTX 4090</div>
-                    <div className="text-[10px] text-[#3ECF8E]">100% Hydro-Cooled</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {/* SECTION: SUPER ADMIN MASTER CMS SUITE */}
+          {(activeSection === 'cms-manager' ||
+            activeSection === 'pages' ||
+            activeSection === 'blog' ||
+            activeSection === 'cms-services' ||
+            activeSection === 'media' ||
+            activeSection === 'design-themes' ||
+            activeSection === 'seo' ||
+            activeSection === 'testimonials' ||
+            activeSection === 'navigation' ||
+            activeSection === 'social') && (
+            <SuperAdminCMSManager />
           )}
 
           {/* SECTION 5: GOOGLE DRIVE */}
@@ -558,6 +791,22 @@ export default function AdminDashboardPage() {
 
           {/* FALLBACK / OTHER CMS VIEWS */}
           {activeSection !== 'dashboard' &&
+            activeSection !== 'super-admin-panel' &&
+            activeSection !== 'super-admin-users' &&
+            activeSection !== 'super-admin-analytics' &&
+            activeSection !== 'super-admin-revenue' &&
+            activeSection !== 'super-admin-gpu' &&
+            activeSection !== 'super-admin-toggles' &&
+            activeSection !== 'super-admin-health' &&
+            activeSection !== 'users' &&
+            activeSection !== 'analytics' &&
+            activeSection !== 'revenue' &&
+            activeSection !== 'clients' &&
+            activeSection !== 'inquiries' &&
+            activeSection !== 'project-management' &&
+            activeSection !== 'xr-links' &&
+            activeSection !== 'pixel-streaming-control' &&
+            activeSection !== 'file-storage' &&
             activeSection !== 'super-admin-crud' &&
             activeSection !== 'projects' &&
             activeSection !== 'admins' &&
@@ -566,7 +815,17 @@ export default function AdminDashboardPage() {
             activeSection !== 'ar' &&
             activeSection !== 'vr-configurator' &&
             activeSection !== 'models' &&
-            activeSection !== 'streaming' && (
+            activeSection !== 'streaming' &&
+            activeSection !== 'cms-manager' &&
+            activeSection !== 'pages' &&
+            activeSection !== 'blog' &&
+            activeSection !== 'cms-services' &&
+            activeSection !== 'media' &&
+            activeSection !== 'design-themes' &&
+            activeSection !== 'seo' &&
+            activeSection !== 'testimonials' &&
+            activeSection !== 'navigation' &&
+            activeSection !== 'social' && (
               <div className="p-8 rounded-2xl bg-[#18181B] border border-[#27272A] text-center space-y-4 font-mono">
                 <div className="w-12 h-12 rounded-full bg-[#3ECF8E]/10 border border-[#3ECF8E]/40 flex items-center justify-center mx-auto text-[#3ECF8E]">
                   <Settings className="w-6 h-6 animate-spin-slow" />
